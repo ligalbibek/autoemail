@@ -4,55 +4,215 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NPC Email Draft Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f3f4f6;min-height:100vh;padding:2rem 1.5rem}
-  h1{font-size:18px;font-weight:600;color:#111827;margin-bottom:1.5rem}
-  .layout{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;max-width:1100px}
-  .card{background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-  .card-title{font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;margin-bottom:1.25rem}
-  .field{margin-bottom:1rem}
-  .field:last-child{margin-bottom:0}
-  .field-label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:#374151;margin-bottom:6px}
-  .field-num{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;background:#e5e7eb;font-size:10px;font-weight:600;color:#6b7280;flex-shrink:0}
-  input[type=text],input[type=email],input[type=date]{display:block;width:100%;padding:9px 11px;font-size:13px;font-family:inherit;color:#111827;background:#ffffff;border:1.5px solid #d1d5db;border-radius:8px;outline:none;transition:border-color .15s,box-shadow .15s}
-  input[type=text]:hover,input[type=email]:hover,input[type=date]:hover{border-color:#9ca3af}
-  input[type=text]:focus,input[type=email]:focus,input[type=date]:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.12)}
-  input::placeholder{color:#9ca3af}
-  .radio-row{display:flex;gap:8px}
-  .r-opt{flex:1;display:flex;align-items:center;gap:8px;padding:9px 12px;border:1.5px solid #d1d5db;border-radius:8px;cursor:pointer;transition:border-color .15s,background .15s;background:#ffffff;user-select:none}
-  .r-opt:hover{border-color:#9ca3af;background:#f9fafb}
-  .r-opt.active{border-color:#6366f1;background:#eef2ff}
-  .r-dot{width:15px;height:15px;border-radius:50%;border:1.5px solid #d1d5db;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-  .r-opt.active .r-dot{border-color:#6366f1;background:#6366f1}
-  .r-dot-inner{width:5px;height:5px;border-radius:50%;background:white;display:none}
-  .r-opt.active .r-dot-inner{display:block}
-  .r-label{font-size:13px;font-weight:500;color:#374151}
-  .right-col{display:flex;flex-direction:column;gap:1rem}
-  .mail-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px 16px;font-size:14px;font-weight:600;font-family:inherit;border:none;border-radius:9px;background:#6366f1;color:#ffffff;cursor:pointer;transition:background .15s;margin-bottom:.75rem}
-  .mail-btn:hover{background:#4f46e5}
-  .mail-btn:active{transform:scale(.99)}
-  .mail-btn:disabled{opacity:.4;cursor:default}
-  .hint{font-size:11px;color:#9ca3af;margin-bottom:.6rem;display:block}
-  .email-preview{background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:8px;padding:1.1rem;font-size:13px;line-height:1.9;color:#374151}
-  .email-para{margin-bottom:.9em}
-  .email-para:last-child{margin-bottom:0}
-  .sig-block{margin-top:.85rem;padding-top:.85rem;border-top:1px solid #e5e7eb;font-size:13px;line-height:1.75;color:#6b7280}
-  .ref-highlight{background:#fef9c3;color:#854d0e;padding:1px 5px;border-radius:4px;font-weight:600}
-  .date-highlight{background:#fce7f3;color:#9d174d;padding:1px 5px;border-radius:4px;font-weight:700}
-  .bottom-row{display:flex;justify-content:flex-end;margin-top:.75rem}
-  .btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;font-size:12px;font-weight:500;font-family:inherit;border:1.5px solid #d1d5db;border-radius:8px;background:#ffffff;color:#374151;cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap}
-  .btn:hover{background:#f3f4f6;border-color:#9ca3af}
-  .btn.copied{border-color:#16a34a;color:#16a34a;background:#f0fdf4}
-  .empty-state{color:#9ca3af;font-size:13px;font-style:italic;padding:.5rem 0}
-  @media(max-width:700px){.layout{grid-template-columns:1fr}}
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a3045;
+    --border-focus: #5b6af0;
+    --accent: #5b6af0;
+    --accent-hover: #4a58d8;
+    --accent-glow: rgba(91,106,240,0.18);
+    --text: #e8eaf2;
+    --text-muted: #7b84a3;
+    --text-dim: #4a5070;
+    --yellow: #f5c842;
+    --yellow-bg: rgba(245,200,66,0.12);
+    --pink: #f06292;
+    --pink-bg: rgba(240,98,146,0.12);
+    --green: #4ade80;
+    --green-bg: rgba(74,222,128,0.1);
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1.5rem 3rem;
+  }
+  .header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .header-icon {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 18px var(--accent-glow);
+  }
+  .header-icon svg { width: 18px; height: 18px; }
+  .header-text h1 { font-size: 17px; font-weight: 600; color: var(--text); }
+  .header-text p { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+  .layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    max-width: 1140px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.4rem;
+  }
+  .card-label {
+    font-size: 10px; font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: .1em;
+    margin-bottom: 1.1rem;
+  }
+  .field { margin-bottom: .9rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .field-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    font-size: 10px; font-weight: 600;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+  input[type=text], input[type=email], input[type=date], textarea {
+    display: block; width: 100%;
+    padding: 9px 12px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input[type=text]:hover, input[type=email]:hover,
+  input[type=date]:hover, textarea:hover { border-color: #3a4060; }
+  input[type=text]:focus, input[type=email]:focus,
+  input[type=date]:focus, textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-dim); }
+  input[type=date] { color-scheme: dark; }
+  textarea { resize: vertical; min-height: 96px; line-height: 1.65; }
+  .radio-row { display: flex; gap: 8px; }
+  .r-opt {
+    flex: 1; display: flex; align-items: center; gap: 8px;
+    padding: 9px 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--surface2);
+    transition: border-color .15s, background .15s;
+    user-select: none;
+  }
+  .r-opt:hover { border-color: #3a4060; }
+  .r-opt.active { border-color: var(--border-focus); background: rgba(91,106,240,.08); }
+  .r-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all .15s;
+  }
+  .r-opt.active .r-dot { border-color: var(--accent); background: var(--accent); }
+  .r-dot-inner { width: 5px; height: 5px; border-radius: 50%; background: white; display: none; }
+  .r-opt.active .r-dot-inner { display: block; }
+  .r-label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+  .r-opt.active .r-label { color: var(--text); }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+  .right-col { display: flex; flex-direction: column; gap: 1rem; }
+  .mail-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 12px 16px;
+    font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+    border: none; border-radius: var(--radius);
+    background: var(--accent); color: #fff;
+    cursor: pointer;
+    transition: background .15s, box-shadow .15s;
+    margin-bottom: .75rem;
+  }
+  .mail-btn:not(:disabled):hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+  .mail-btn:disabled { opacity: .35; cursor: default; }
+  .hint { font-size: 11px; color: var(--text-dim); margin-bottom: .6rem; display: block; }
+  .email-preview {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    font-size: 13.5px; line-height: 1.9;
+    color: var(--text);
+  }
+  .email-para { margin-bottom: .85em; }
+  .email-para:last-child { margin-bottom: 0; }
+  .sig-block {
+    margin-top: .8rem; padding-top: .8rem;
+    border-top: 1px solid var(--border);
+    font-size: 13px; line-height: 1.75;
+    color: var(--text-muted);
+  }
+  .ref-highlight {
+    background: var(--yellow-bg); color: var(--yellow);
+    padding: 1px 5px; border-radius: 4px;
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+  }
+  .date-highlight {
+    background: var(--pink-bg); color: var(--pink);
+    padding: 1px 5px; border-radius: 4px; font-weight: 600;
+  }
+  .empty-state {
+    color: var(--text-dim); font-size: 13px; font-style: italic;
+    padding: .4rem 0; text-align: center;
+  }
+  .bottom-row { display: flex; justify-content: flex-end; margin-top: .75rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 14px;
+    font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface2); color: var(--text-muted);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: #252a3a; border-color: #3a4060; color: var(--text); }
+  .btn.copied { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  @media(max-width:780px){ .layout{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
-<h1>NPC Email Draft Tool</h1>
+
+<div class="header">
+  <div class="header-icon">
+    <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="3.5" width="16" height="11" rx="2" stroke="white" stroke-width="1.5"/>
+      <path d="M1.5 5L9 10.5L16.5 5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>NPC Email Draft Tool</h1>
+    <p>Icon Water · Builder Services</p>
+  </div>
+</div>
+
 <div class="layout">
   <div class="card">
-    <div class="card-title">Application details</div>
+    <div class="card-label">Application details</div>
     <div class="field">
       <div class="field-label"><span class="field-num">1</span> NPC reference number</div>
       <input type="text" id="npc" placeholder="e.g. 01543/2026/NP RED HILL Section 8 Block 72" oninput="update()">
@@ -86,17 +246,32 @@
         </div>
       </div>
     </div>
+    <hr class="divider">
+    <div class="field">
+      <div class="field-label"><span class="field-num">7</span> Signature</div>
+      <textarea id="signature" oninput="update()">Regards
+Bibek Ligal
+Team Leader - Builder Services
+Customer Engagement Group
+
+T: 02 6180 3111</textarea>
+    </div>
   </div>
 
   <div class="right-col">
     <div class="card">
-      <div class="card-title">Draft email</div>
+      <div class="card-label">Draft email</div>
       <button class="mail-btn" id="open-btn" onclick="openInMail()" disabled>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="white" stroke-width="1.4"/><path d="M1.5 4L8 9.5L14.5 4" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="white" stroke-width="1.4"/>
+          <path d="M1.5 4L8 9.5L14.5 4" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
         Open in mail client ↗
       </button>
-      <span class="hint" id="mail-hint">Fill in details on the left to generate draft</span>
-      <div id="email-body"><div class="empty-state">Your email preview will appear here.</div></div>
+      <span class="hint" id="mail-hint">Fill in the details on the left to generate your draft</span>
+      <div id="email-body">
+        <div class="empty-state">Your email preview will appear here once you start filling in the fields.</div>
+      </div>
       <div class="bottom-row">
         <button class="btn" id="copy-email-btn" onclick="copyEmail()">Copy email body</button>
       </div>
@@ -106,57 +281,51 @@
 
 <script>
 var _opt = '1';
-var SIG = 'Regards\nBibek Ligal\nTeam Leader - Builder Services\nCustomer Engagement Group\n\nT: 02 6180 3111';
 var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function formatDate(val) {
   if (!val) return null;
-  var parts = val.split('-');
-  var d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  var p = val.split('-');
+  var d = new Date(+p[0], +p[1]-1, +p[2]);
   return DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
 }
-
 function setOpt(v) {
   _opt = v;
-  document.getElementById('opt1').className = 'r-opt' + (v === '1' ? ' active' : '');
-  document.getElementById('opt2').className = 'r-opt' + (v === '2' ? ' active' : '');
+  document.getElementById('opt1').className = 'r-opt' + (v==='1'?' active':'');
+  document.getElementById('opt2').className = 'r-opt' + (v==='2'?' active':'');
   update();
 }
-
 function vals() {
   return {
-    npc: document.getElementById('npc').value.trim(),
-    cmp: document.getElementById('cmp').value.trim(),
-    name: document.getElementById('name').value.trim(),
+    npc:   document.getElementById('npc').value.trim(),
+    cmp:   document.getElementById('cmp').value.trim(),
+    name:  document.getElementById('name').value.trim(),
     email: document.getElementById('email').value.trim(),
     duedate: document.getElementById('duedate').value,
-    opt: _opt
+    sig:   document.getElementById('signature').value.trim(),
+    opt:   _opt
   };
 }
-
 function getSubject(v) {
-  var parts = [];
-  if (v.npc) parts.push(v.npc);
-  if (v.cmp) parts.push(v.cmp);
-  return parts.join(' ');
+  var p = [];
+  if (v.npc) p.push(v.npc);
+  if (v.cmp) p.push(v.cmp);
+  return p.join(' ');
 }
-
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-
 function hilite(text, ref) {
-  if (!ref) return esc(text);
   var et = esc(text);
-  var er = esc(ref).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return et.replace(new RegExp('(' + er + ')', 'g'), '<span class="ref-highlight">$1</span>');
+  if (!ref) return et;
+  var er = esc(ref).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return et.replace(new RegExp('('+er+')','g'), '<span class="ref-highlight">$1</span>');
 }
-
-function getBodyParas(v) {
+function getParas(v) {
   var ref = v.npc || '[NPC reference]';
-  var nm = v.name || '[Applicant name]';
-  var dateStr = formatDate(v.duedate) || '[due date]';
+  var nm  = v.name || '[Applicant name]';
+  var ds  = formatDate(v.duedate) || '[due date]';
   var p3, p4;
   if (v.opt === '1') {
     p3 = 'The submitted property owner email address does not match our existing records, and we are unable to proceed with the application.';
@@ -170,63 +339,59 @@ function getBodyParas(v) {
     { t: 'We are currently processing application ' + ref + ' submitted to us through our NPC submission portal. Our process now includes an email to the property owner notifying them of the collection of personal information and application authorisation confirmation.', ref: ref },
     { t: p3, ref: false },
     { t: p4, ref: false },
-    { t: 'If we do not receive any response by ' + dateStr + ', the current application will be withdrawn and not proceed with assessment.', bold: true, ref: false, date: dateStr },
+    { t: 'If we do not receive any response by ' + ds + ', the current application will be withdrawn and not proceed with assessment.', bold: true, date: ds },
     { t: 'Please let me know if you have any questions or concerns.', ref: false }
   ];
 }
-
-function renderBody(v) {
-  var paras = getBodyParas(v);
-  var html = paras.map(function(p) {
+function renderHTML(v) {
+  var html = getParas(v).map(function(p) {
     var h = p.ref ? hilite(p.t, p.ref) : esc(p.t);
     if (p.bold && p.date) {
-      var ed = esc(p.date).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      h = h.replace(new RegExp('(' + ed + ')'), function(m) { return '<span class="date-highlight">' + m + '</span>'; });
+      var ed = esc(p.date).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      h = h.replace(new RegExp('('+ed+')'), function(m){ return '<span class="date-highlight">'+m+'</span>'; });
       h = '<strong>' + h + '</strong>';
     }
     return '<div class="email-para">' + h + '</div>';
   }).join('');
-  html += '<div class="sig-block">' + esc(SIG).replace(/\n/g, '<br>') + '</div>';
+  if (v.sig) {
+    html += '<div class="sig-block">' + esc(v.sig).replace(/\n/g,'<br>') + '</div>';
+  }
   return html;
 }
-
 function getPlainText(v) {
-  var body = getBodyParas(v).map(function(p) { return p.t; }).join('\n\n');
-  return body + '\n\n' + SIG;
+  var body = getParas(v).map(function(p){ return p.t; }).join('\n\n');
+  return v.sig ? body + '\n\n' + v.sig : body;
 }
-
 function update() {
   var v = vals();
   var hasContent = !!(v.name || v.npc || v.cmp);
   var hasEmail = !!v.email;
   document.getElementById('open-btn').disabled = !hasEmail;
-  document.getElementById('mail-hint').textContent = hasContent
-    ? (hasEmail ? 'BCC: basubmission_watersewer@iconwater.com.au' : 'Add applicant email to enable')
-    : 'Fill in details on the left to generate draft';
-  var body = document.getElementById('email-body');
+  var hintEl = document.getElementById('mail-hint');
+  if (!hasContent) hintEl.textContent = 'Fill in the details on the left to generate your draft';
+  else if (!hasEmail) hintEl.textContent = 'Add applicant email to enable the mail button';
+  else hintEl.textContent = 'BCC: basubmission_watersewer@iconwater.com.au';
+  var bodyEl = document.getElementById('email-body');
   if (hasContent) {
     var preview = document.createElement('div');
     preview.className = 'email-preview';
-    preview.innerHTML = renderBody(v);
-    body.innerHTML = '';
-    body.appendChild(preview);
+    preview.innerHTML = renderHTML(v);
+    bodyEl.innerHTML = '';
+    bodyEl.appendChild(preview);
   } else {
-    body.innerHTML = '<div class="empty-state">Your email preview will appear here.</div>';
+    bodyEl.innerHTML = '<div class="empty-state">Your email preview will appear here once you start filling in the fields.</div>';
   }
 }
-
 function copyText(text, btnId) {
   navigator.clipboard.writeText(text).then(function() {
-    var btn = document.getElementById(btnId);
-    var orig = btn.textContent;
-    btn.textContent = 'Copied!';
-    btn.classList.add('copied');
-    setTimeout(function() { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
+    var b = document.getElementById(btnId);
+    var orig = b.textContent;
+    b.textContent = 'Copied!';
+    b.classList.add('copied');
+    setTimeout(function(){ b.textContent = orig; b.classList.remove('copied'); }, 1800);
   });
 }
-
 function copyEmail() { copyText(getPlainText(vals()), 'copy-email-btn'); }
-
 function openInMail() {
   var v = vals();
   if (!v.email) return;
@@ -235,7 +400,6 @@ function openInMail() {
     + '&bcc=' + encodeURIComponent('basubmission_watersewer@iconwater.com.au')
     + '&body=' + encodeURIComponent(getPlainText(v));
 }
-
 update();
 </script>
 </body>
