@@ -24,8 +24,6 @@
     --pink-bg: rgba(240,98,146,0.12);
     --green: #4ade80;
     --green-bg: rgba(74,222,128,0.1);
-    --red: #f87171;
-    --red-bg: rgba(248,113,113,0.1);
     --radius: 10px;
     --radius-lg: 14px;
   }
@@ -144,38 +142,12 @@
     cursor: pointer;
     transition: background .15s, box-shadow .15s;
     margin-bottom: .75rem;
-    position: relative;
   }
   .mail-btn:not(:disabled):hover {
     background: var(--accent-hover);
     box-shadow: 0 4px 20px var(--accent-glow);
   }
   .mail-btn:disabled { opacity: .35; cursor: default; }
-  .mail-btn .spinner {
-    display: none;
-    width: 14px; height: 14px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin .6s linear infinite;
-  }
-  .mail-btn.loading .spinner { display: block; }
-  .mail-btn.loading .btn-label { opacity: 0.6; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Log status toast */
-  .toast {
-    display: none;
-    align-items: center; gap: 7px;
-    padding: 7px 12px;
-    border-radius: 8px;
-    font-size: 12px; font-weight: 500;
-    margin-bottom: .6rem;
-  }
-  .toast.success { display: flex; background: var(--green-bg); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
-  .toast.error   { display: flex; background: var(--red-bg);   color: var(--red);   border: 1px solid rgba(248,113,113,0.2); }
-  .toast svg { width: 14px; height: 14px; flex-shrink: 0; }
-
   .hint { font-size: 11px; color: var(--text-dim); margin-bottom: .6rem; display: block; }
   .email-preview {
     background: var(--surface2);
@@ -289,32 +261,17 @@ T: 02 6180 3111</textarea>
   <div class="right-col">
     <div class="card">
       <div class="card-label">Draft email</div>
-
       <button class="mail-btn" id="open-btn" onclick="openInMail()" disabled>
-        <div class="spinner"></div>
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="mail-icon">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
           <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="white" stroke-width="1.4"/>
           <path d="M1.5 4L8 9.5L14.5 4" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
-        <span class="btn-label">Open in mail client ↗</span>
+        Open in mail client ↗
       </button>
-
-      <!-- Log status toast -->
-      <div class="toast" id="toast-success">
-        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M4.5 7L6.5 9L9.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Logged to SharePoint successfully
-      </div>
-      <div class="toast" id="toast-error">
-        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M7 4.5V7.5M7 9.5V9.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        Could not log to SharePoint — email still opened
-      </div>
-
       <span class="hint" id="mail-hint">Fill in the details on the left to generate your draft</span>
-
       <div id="email-body">
         <div class="empty-state">Your email preview will appear here once you start filling in the fields.</div>
       </div>
-
       <div class="bottom-row">
         <button class="btn" id="copy-email-btn" onclick="copyEmail()">Copy email body</button>
       </div>
@@ -426,60 +383,30 @@ function update() {
     bodyEl.innerHTML = '<div class="empty-state">Your email preview will appear here once you start filling in the fields.</div>';
   }
 }
-
-function showToast(type) {
-  var s = document.getElementById('toast-success');
-  var e = document.getElementById('toast-error');
-  s.className = 'toast'; e.className = 'toast';
-  document.getElementById('toast-' + type).className = 'toast ' + type;
-  setTimeout(function() {
-    document.getElementById('toast-' + type).className = 'toast';
-  }, 4000);
-}
-
 function logToSharePoint(v) {
-  return fetch(FLOW_URL, {
+  fetch(FLOW_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      npc_ref:          v.npc   || '',
-      cmp_ref:          v.cmp   || '',
-      applicant_name:   v.name  || '',
-      applicant_email:  v.email || '',
-      issue_type:       v.opt === '1' ? 'Email not matched' : 'Owner not matching',
-      due_date:         formatDate(v.duedate) || '',
-      timestamp:        new Date().toISOString()
+      npc_ref:         v.npc   || '',
+      cmp_ref:         v.cmp   || '',
+      applicant_name:  v.name  || '',
+      applicant_email: v.email || '',
+      issue_type:      v.opt === '1' ? 'Email not matched' : 'Owner not matching',
+      due_date:        formatDate(v.duedate) || '',
+      timestamp:       new Date().toISOString()
     })
-  });
+  }).catch(function(){});  // silent — no feedback shown
 }
-
 function openInMail() {
   var v = vals();
   if (!v.email) return;
-
-  var btn = document.getElementById('open-btn');
-  btn.classList.add('loading');
-  btn.disabled = true;
-
-  // Log to SharePoint, then open mail regardless of outcome
-  logToSharePoint(v)
-    .then(function(res) {
-      showToast(res.ok ? 'success' : 'error');
-    })
-    .catch(function() {
-      showToast('error');
-    })
-    .finally(function() {
-      btn.classList.remove('loading');
-      btn.disabled = false;
-      // Open mail client
-      window.location.href = 'mailto:' + encodeURIComponent(v.email)
-        + '?subject=' + encodeURIComponent(getSubject(v))
-        + '&bcc=' + encodeURIComponent('basubmission_watersewer@iconwater.com.au')
-        + '&body=' + encodeURIComponent(getPlainText(v));
-    });
+  logToSharePoint(v);
+  window.location.href = 'mailto:' + encodeURIComponent(v.email)
+    + '?subject=' + encodeURIComponent(getSubject(v))
+    + '&bcc=' + encodeURIComponent('basubmission_watersewer@iconwater.com.au')
+    + '&body=' + encodeURIComponent(getPlainText(v));
 }
-
 function copyText(text, btnId) {
   navigator.clipboard.writeText(text).then(function() {
     var b = document.getElementById(btnId);
@@ -490,7 +417,6 @@ function copyText(text, btnId) {
   });
 }
 function copyEmail() { copyText(getPlainText(vals()), 'copy-email-btn'); }
-
 update();
 </script>
 </body>
