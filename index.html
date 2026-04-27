@@ -24,6 +24,8 @@
     --pink-bg: rgba(240,98,146,0.12);
     --green: #4ade80;
     --green-bg: rgba(74,222,128,0.1);
+    --red: #f87171;
+    --red-bg: rgba(248,113,113,0.1);
     --radius: 10px;
     --radius-lg: 14px;
   }
@@ -80,6 +82,419 @@
     display: inline-flex; align-items: center; justify-content: center;
     width: 18px; height: 18px; border-radius: 50%;
     background: var(--surface2);
+    border: 1px solid var(--border);
+    font-size: 10px; font-weight: 600;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+  }
+  input[type=text], input[type=email], input[type=date], textarea {
+    display: block; width: 100%;
+    padding: 9px 12px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input[type=text]:hover, input[type=email]:hover,
+  input[type=date]:hover, textarea:hover { border-color: #3a4060; }
+  input[type=text]:focus, input[type=email]:focus,
+  input[type=date]:focus, textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-dim); }
+  input[type=date] { color-scheme: dark; }
+  textarea { resize: vertical; min-height: 96px; line-height: 1.65; }
+  .radio-row { display: flex; gap: 8px; }
+  .r-opt {
+    flex: 1; display: flex; align-items: center; gap: 8px;
+    padding: 9px 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--surface2);
+    transition: border-color .15s, background .15s;
+    user-select: none;
+  }
+  .r-opt:hover { border-color: #3a4060; }
+  .r-opt.active { border-color: var(--border-focus); background: rgba(91,106,240,.08); }
+  .r-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all .15s;
+  }
+  .r-opt.active .r-dot { border-color: var(--accent); background: var(--accent); }
+  .r-dot-inner { width: 5px; height: 5px; border-radius: 50%; background: white; display: none; }
+  .r-opt.active .r-dot-inner { display: block; }
+  .r-label { font-size: 12px; font-weight: 500; color: var(--text-muted); }
+  .r-opt.active .r-label { color: var(--text); }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+  .right-col { display: flex; flex-direction: column; gap: 1rem; }
+  .mail-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 12px 16px;
+    font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+    border: none; border-radius: var(--radius);
+    background: var(--accent); color: #fff;
+    cursor: pointer;
+    transition: background .15s, box-shadow .15s;
+    margin-bottom: .75rem;
+    position: relative;
+  }
+  .mail-btn:not(:disabled):hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+  .mail-btn:disabled { opacity: .35; cursor: default; }
+  .mail-btn .spinner {
+    display: none;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+  }
+  .mail-btn.loading .spinner { display: block; }
+  .mail-btn.loading .btn-label { opacity: 0.6; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Log status toast */
+  .toast {
+    display: none;
+    align-items: center; gap: 7px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 12px; font-weight: 500;
+    margin-bottom: .6rem;
+  }
+  .toast.success { display: flex; background: var(--green-bg); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+  .toast.error   { display: flex; background: var(--red-bg);   color: var(--red);   border: 1px solid rgba(248,113,113,0.2); }
+  .toast svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .hint { font-size: 11px; color: var(--text-dim); margin-bottom: .6rem; display: block; }
+  .email-preview {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    font-size: 13.5px; line-height: 1.9;
+    color: var(--text);
+  }
+  .email-para { margin-bottom: .85em; }
+  .email-para:last-child { margin-bottom: 0; }
+  .sig-block {
+    margin-top: .8rem; padding-top: .8rem;
+    border-top: 1px solid var(--border);
+    font-size: 13px; line-height: 1.75;
+    color: var(--text-muted);
+  }
+  .ref-highlight {
+    background: var(--yellow-bg); color: var(--yellow);
+    padding: 1px 5px; border-radius: 4px;
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+  }
+  .date-highlight {
+    background: var(--pink-bg); color: var(--pink);
+    padding: 1px 5px; border-radius: 4px; font-weight: 600;
+  }
+  .empty-state {
+    color: var(--text-dim); font-size: 13px; font-style: italic;
+    padding: .4rem 0; text-align: center;
+  }
+  .bottom-row { display: flex; justify-content: flex-end; margin-top: .75rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 14px;
+    font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface2); color: var(--text-muted);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: #252a3a; border-color: #3a4060; color: var(--text); }
+  .btn.copied { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  @media(max-width:780px){ .layout{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-icon">
+    <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="3.5" width="16" height="11" rx="2" stroke="white" stroke-width="1.5"/>
+      <path d="M1.5 5L9 10.5L16.5 5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>NPC Email Draft Tool</h1>
+    <p>Icon Water · Builder Services</p>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="card">
+    <div class="card-label">Application details</div>
+    <div class="field">
+      <div class="field-label"><span class="field-num">1</span> NPC reference number</div>
+      <input type="text" id="npc" placeholder="e.g. 01543/2026/NP RED HILL Section 8 Block 72" oninput="update()">
+    </div>
+    <div class="field">
+      <div class="field-label"><span class="field-num">2</span> CMP reference number</div>
+      <input type="text" id="cmp" placeholder="e.g. CMP:02570027523" oninput="update()">
+    </div>
+    <div class="field">
+      <div class="field-label"><span class="field-num">3</span> Applicant name</div>
+      <input type="text" id="name" placeholder="First name" oninput="update()">
+    </div>
+    <div class="field">
+      <div class="field-label"><span class="field-num">4</span> Applicant email</div>
+      <input type="email" id="email" placeholder="applicant@example.com" oninput="update()">
+    </div>
+    <div class="field">
+      <div class="field-label"><span class="field-num">5</span> Response due date</div>
+      <input type="date" id="duedate" oninput="update()">
+    </div>
+    <div class="field">
+      <div class="field-label"><span class="field-num">6</span> Issue type</div>
+      <div class="radio-row">
+        <div class="r-opt active" id="opt1" onclick="setOpt('1')">
+          <div class="r-dot"><div class="r-dot-inner"></div></div>
+          <span class="r-label">Email not matched</span>
+        </div>
+        <div class="r-opt" id="opt2" onclick="setOpt('2')">
+          <div class="r-dot"><div class="r-dot-inner"></div></div>
+          <span class="r-label">Owner not matching</span>
+        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="field">
+      <div class="field-label"><span class="field-num">7</span> Signature</div>
+      <textarea id="signature" oninput="update()">Regards
+Bibek Ligal
+Team Leader - Builder Services
+Customer Engagement Group
+
+T: 02 6180 3111</textarea>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="card">
+      <div class="card-label">Draft email</div>
+
+      <button class="mail-btn" id="open-btn" onclick="openInMail()" disabled>
+        <div class="spinner"></div>
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="mail-icon">
+          <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="white" stroke-width="1.4"/>
+          <path d="M1.5 4L8 9.5L14.5 4" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <span class="btn-label">Open in mail client ↗</span>
+      </button>
+
+      <!-- Log status toast -->
+      <div class="toast" id="toast-success">
+        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M4.5 7L6.5 9L9.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Logged to SharePoint successfully
+      </div>
+      <div class="toast" id="toast-error">
+        <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M7 4.5V7.5M7 9.5V9.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Could not log to SharePoint — email still opened
+      </div>
+
+      <span class="hint" id="mail-hint">Fill in the details on the left to generate your draft</span>
+
+      <div id="email-body">
+        <div class="empty-state">Your email preview will appear here once you start filling in the fields.</div>
+      </div>
+
+      <div class="bottom-row">
+        <button class="btn" id="copy-email-btn" onclick="copyEmail()">Copy email body</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var _opt = '1';
+var FLOW_URL = 'https://defaulta880cce0b8664e7aa23fef5a755471.d3.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/0bcf0b99d1374cf49670fad1ba0ee6d3/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=iyidNMsWmZu8j_4OQnhr4TpOuptZdcyjZ-2KqEuvPnw';
+var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function formatDate(val) {
+  if (!val) return null;
+  var p = val.split('-');
+  var d = new Date(+p[0], +p[1]-1, +p[2]);
+  return DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+}
+function setOpt(v) {
+  _opt = v;
+  document.getElementById('opt1').className = 'r-opt' + (v==='1'?' active':'');
+  document.getElementById('opt2').className = 'r-opt' + (v==='2'?' active':'');
+  update();
+}
+function vals() {
+  return {
+    npc:     document.getElementById('npc').value.trim(),
+    cmp:     document.getElementById('cmp').value.trim(),
+    name:    document.getElementById('name').value.trim(),
+    email:   document.getElementById('email').value.trim(),
+    duedate: document.getElementById('duedate').value,
+    sig:     document.getElementById('signature').value.trim(),
+    opt:     _opt
+  };
+}
+function getSubject(v) {
+  var p = [];
+  if (v.npc) p.push(v.npc);
+  if (v.cmp) p.push(v.cmp);
+  return p.join(' ');
+}
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function hilite(text, ref) {
+  var et = esc(text);
+  if (!ref) return et;
+  var er = esc(ref).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return et.replace(new RegExp('('+er+')','g'), '<span class="ref-highlight">$1</span>');
+}
+function getParas(v) {
+  var ref = v.npc || '[NPC reference]';
+  var nm  = v.name || '[Applicant name]';
+  var ds  = formatDate(v.duedate) || '[due date]';
+  var p3, p4;
+  if (v.opt === '1') {
+    p3 = 'The submitted property owner email address does not match our existing records, and we are unable to proceed with the application.';
+    p4 = 'Please provide the property owner email address (by return email) so we can update the application and proceed with assessment.';
+  } else {
+    p3 = 'The submitted property owner details provided do not match our current records, and we are unable to proceed with the application.';
+    p4 = 'Please provide the property owner detail and correct email address (by return email) so we can update the application and proceed with assessment.';
+  }
+  return [
+    { t: 'Hi ' + nm + ',', ref: false },
+    { t: 'We are currently processing application ' + ref + ' submitted to us through our NPC submission portal. Our process now includes an email to the property owner notifying them of the collection of personal information and application authorisation confirmation.', ref: ref },
+    { t: p3, ref: false },
+    { t: p4, ref: false },
+    { t: 'If we do not receive any response by ' + ds + ', the current application will be withdrawn and not proceed with assessment.', bold: true, date: ds },
+    { t: 'Please let me know if you have any questions or concerns.', ref: false }
+  ];
+}
+function renderHTML(v) {
+  var html = getParas(v).map(function(p) {
+    var h = p.ref ? hilite(p.t, p.ref) : esc(p.t);
+    if (p.bold && p.date) {
+      var ed = esc(p.date).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      h = h.replace(new RegExp('('+ed+')'), function(m){ return '<span class="date-highlight">'+m+'</span>'; });
+      h = '<strong>' + h + '</strong>';
+    }
+    return '<div class="email-para">' + h + '</div>';
+  }).join('');
+  if (v.sig) {
+    html += '<div class="sig-block">' + esc(v.sig).replace(/\n/g,'<br>') + '</div>';
+  }
+  return html;
+}
+function getPlainText(v) {
+  var body = getParas(v).map(function(p){ return p.t; }).join('\n\n');
+  return v.sig ? body + '\n\n' + v.sig : body;
+}
+function update() {
+  var v = vals();
+  var hasContent = !!(v.name || v.npc || v.cmp);
+  var hasEmail = !!v.email;
+  document.getElementById('open-btn').disabled = !hasEmail;
+  var hintEl = document.getElementById('mail-hint');
+  if (!hasContent) hintEl.textContent = 'Fill in the details on the left to generate your draft';
+  else if (!hasEmail) hintEl.textContent = 'Add applicant email to enable the mail button';
+  else hintEl.textContent = 'BCC: basubmission_watersewer@iconwater.com.au';
+  var bodyEl = document.getElementById('email-body');
+  if (hasContent) {
+    var preview = document.createElement('div');
+    preview.className = 'email-preview';
+    preview.innerHTML = renderHTML(v);
+    bodyEl.innerHTML = '';
+    bodyEl.appendChild(preview);
+  } else {
+    bodyEl.innerHTML = '<div class="empty-state">Your email preview will appear here once you start filling in the fields.</div>';
+  }
+}
+
+function showToast(type) {
+  var s = document.getElementById('toast-success');
+  var e = document.getElementById('toast-error');
+  s.className = 'toast'; e.className = 'toast';
+  document.getElementById('toast-' + type).className = 'toast ' + type;
+  setTimeout(function() {
+    document.getElementById('toast-' + type).className = 'toast';
+  }, 4000);
+}
+
+function logToSharePoint(v) {
+  return fetch(FLOW_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      npc_ref:          v.npc   || '',
+      cmp_ref:          v.cmp   || '',
+      applicant_name:   v.name  || '',
+      applicant_email:  v.email || '',
+      issue_type:       v.opt === '1' ? 'Email not matched' : 'Owner not matching',
+      due_date:         formatDate(v.duedate) || '',
+      timestamp:        new Date().toISOString()
+    })
+  });
+}
+
+function openInMail() {
+  var v = vals();
+  if (!v.email) return;
+
+  var btn = document.getElementById('open-btn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  // Log to SharePoint, then open mail regardless of outcome
+  logToSharePoint(v)
+    .then(function(res) {
+      showToast(res.ok ? 'success' : 'error');
+    })
+    .catch(function() {
+      showToast('error');
+    })
+    .finally(function() {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      // Open mail client
+      window.location.href = 'mailto:' + encodeURIComponent(v.email)
+        + '?subject=' + encodeURIComponent(getSubject(v))
+        + '&bcc=' + encodeURIComponent('basubmission_watersewer@iconwater.com.au')
+        + '&body=' + encodeURIComponent(getPlainText(v));
+    });
+}
+
+function copyText(text, btnId) {
+  navigator.clipboard.writeText(text).then(function() {
+    var b = document.getElementById(btnId);
+    var orig = b.textContent;
+    b.textContent = 'Copied!';
+    b.classList.add('copied');
+    setTimeout(function(){ b.textContent = orig; b.classList.remove('copied'); }, 1800);
+  });
+}
+function copyEmail() { copyText(getPlainText(vals()), 'copy-email-btn'); }
+
+update();
+</script>
+</body>
+</html>    background: var(--surface2);
     border: 1px solid var(--border);
     font-size: 10px; font-weight: 600;
     color: var(--text-dim);
